@@ -7,11 +7,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ovh.major.songify.song.dto.request.PartialySingleSongRequestDto;
 import ovh.major.songify.song.dto.request.SingleSongRequestDto;
-import ovh.major.songify.song.dto.response.DeleteRemoveSongDto;
-import ovh.major.songify.song.dto.response.SingleSongResponseDto;
-import ovh.major.songify.song.dto.response.SongResponseDto;
-import ovh.major.songify.song.dto.response.UpdateSongResponseDto;
+import ovh.major.songify.song.dto.response.*;
 import ovh.major.songify.song.error.SongNotFoundException;
 
 import java.util.ArrayList;
@@ -89,11 +87,11 @@ public class SongRestController {
         if (!simpleSongsDatabase.containsKey(id)) {
             throw new SongNotFoundException("Song with id " + id + " not found.");
         }
-        SongEntity oldSong = simpleSongsDatabase.replace(id, SongEntity.builder()
+        SongEntity oldSong = simpleSongsDatabase.put(id, SongEntity.builder()
                 .name(song.songName())
                 .artist(song.artist())
                 .build());
-        log.info("Song with id " + id + " with old name " + oldSong + " was changed. New name id " + song.songName());
+        log.info("Song with id " + id + " was changed");
         return ResponseEntity.ok(UpdateSongResponseDto.builder()
                 .artist(song.artist())
                 .songName(song.songName())
@@ -101,19 +99,25 @@ public class SongRestController {
     }
 
     @PatchMapping("/songs/{id}/{newId}")
-    public ResponseEntity<UpdateSongResponseDto> patchSongById(@PathVariable Integer id, @PathVariable Integer newId, @RequestBody SingleSongRequestDto song) {
+    public ResponseEntity<PartiallyUpdateSongResponseDto> patchSongById(@PathVariable Integer id, @RequestBody PartialySingleSongRequestDto songRequest) {
         if (!simpleSongsDatabase.containsKey(id)) {
             throw new SongNotFoundException("Song with id " + id + " not found.");
         }
-        simpleSongsDatabase.remove(id);
-        simpleSongsDatabase.put(newId, SongEntity.builder()
-                .artist(song.artist())
-                .name(song.songName())
-                .build());
-        return ResponseEntity.ok(UpdateSongResponseDto.builder()
-                .songName(song.songName())
-                .artist(song.artist())
-                .build());
+        SongEntity song = simpleSongsDatabase.get(id);
+        SongEntity.SongEntityBuilder builder = SongEntity.builder();
+        if (songRequest.artist() != null) {
+            builder.artist(songRequest.artist());
+        } else {
+            builder.artist(song.artist());
+        }
+        if (songRequest.songName() != null) {
+            builder.name(songRequest.songName());
+        } else {
+            builder.name(song.name());
+        }
+        SongEntity newSong = builder.build();
+        simpleSongsDatabase.put(id,newSong);
+        return ResponseEntity.ok(new PartiallyUpdateSongResponseDto("Song Updated",HttpStatus.OK));
     }
 
     @PostMapping("/songs")
