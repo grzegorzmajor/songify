@@ -1,6 +1,6 @@
 package ovh.major.songify;
 
-import java.util.List;
+import java.util.Map;
 
-public record SongResponseDto(List<String> songs ) {
+public record SongResponseDto(Map<Integer, String> songs ) {
 }
