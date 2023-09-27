@@ -1,28 +1,31 @@
 package ovh.major.songify;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@Log4j2
 class SongsController {
 
-    Map<Integer,String> simpleDatabase = new HashMap<>();
+    Map<Integer, String> simpleDatabase = new HashMap<>(Map.of(
+            1, "Wlazł kotek na płotek",
+            2, "Z popielnika na Wojtusia iskiereczka mruga",
+            3, "Ach śpij Kochanie",
+            4, "Gdzie strumyk płynie z wolna",
+            5, "Jedzie pociąg z daleka",
+            6, "Miała baba koguta"
+    ));
 
     @GetMapping("/songs")
-    public ResponseEntity<SongResponseDto> getSongs(@RequestParam(required = false) Integer limit){
-        simpleDatabase.put(1,"Wlazł kotek na płotek");
-        simpleDatabase.put(2,"Z popielnika na Wojtusia iskiereczka mruga");
-
+    public ResponseEntity<SongResponseDto> getSongs(@RequestParam(required = false) Integer limit) {
         if (limit != null) {
-            Map<Integer,String> limitedMap = simpleDatabase.entrySet()
+            Map<Integer, String> limitedMap = simpleDatabase.entrySet()
                     .stream()
                     .limit(limit)
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -34,7 +37,10 @@ class SongsController {
     }
 
     @GetMapping("/songs/{id}")
-    public ResponseEntity<SingleSongResponseDto> getSongsById(@PathVariable(name = "id" ) Integer songId) {
+    public ResponseEntity<SingleSongResponseDto> getSongsById(
+            @PathVariable(name = "id") Integer songId,
+            @RequestHeader(required = false) String requestId) {
+        log.info("RequestId: " + requestId);
         String song = simpleDatabase.get(songId);
         if (song == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
