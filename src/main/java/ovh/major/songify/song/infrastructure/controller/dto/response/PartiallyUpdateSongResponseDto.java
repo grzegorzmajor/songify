@@ -1,4 +1,4 @@
-package ovh.major.songify.song.dto.response;
+package ovh.major.songify.song.infrastructure.controller.dto.response;
 
 import org.springframework.http.HttpStatus;
 

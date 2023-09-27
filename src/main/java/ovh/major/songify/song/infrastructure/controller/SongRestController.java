@@ -1,4 +1,4 @@
-package ovh.major.songify.song.controller;
+package ovh.major.songify.song.infrastructure.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -7,13 +7,14 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ovh.major.songify.song.dto.request.PartialySingleSongRequestDto;
-import ovh.major.songify.song.dto.request.SingleSongRequestDto;
-import ovh.major.songify.song.dto.response.*;
-import ovh.major.songify.song.error.SongNotFoundException;
-import ovh.major.songify.song.mappers.SingleSongResponseMapper;
-import ovh.major.songify.song.mappers.SongEntityMapper;
-import ovh.major.songify.song.mappers.UpdateSongResponseMapper;
+import ovh.major.songify.song.infrastructure.controller.dto.request.PartialySingleSongRequestDto;
+import ovh.major.songify.song.infrastructure.controller.dto.request.SingleSongRequestDto;
+import ovh.major.songify.song.infrastructure.controller.dto.response.*;
+import ovh.major.songify.song.infrastructure.controller.mappers.SingleSongResponseMapper;
+import ovh.major.songify.song.infrastructure.controller.mappers.SongEntityMapper;
+import ovh.major.songify.song.infrastructure.controller.mappers.UpdateSongResponseMapper;
+import ovh.major.songify.song.domain.model.SongNotFoundException;
+import ovh.major.songify.song.domain.model.SongEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -138,7 +139,9 @@ public class SongRestController {
                 3, new SongEntity("Ach śpij Kochanie", "Unknown"),
                 4, new SongEntity("Gdzie strumyk płynie z wolna", "Unknown"),
                 5, new SongEntity("Jedzie pociąg z daleka", "Unknown"),
-                6, new SongEntity("Miała baba koguta", "Unknown")));
+                6, new SongEntity("Miała baba koguta", "Unknown"),
+                7, new SongEntity("Mydło wszystko umyje", "Fasolki")
+        ));
     }
 
 }

@@ -1,4 +1,4 @@
-package ovh.major.songify.song.controller;
+package ovh.major.songify.song.domain.model;
 
 import lombok.Builder;
 

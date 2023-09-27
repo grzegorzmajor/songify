@@ -1,4 +1,4 @@
-package ovh.major.songify.song.error;
+package ovh.major.songify.song.infrastructure.controller.error;
 
 import org.springframework.http.HttpStatus;
 

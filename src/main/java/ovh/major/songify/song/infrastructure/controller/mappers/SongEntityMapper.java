@@ -1,7 +1,7 @@
-package ovh.major.songify.song.mappers;
+package ovh.major.songify.song.infrastructure.controller.mappers;
 
-import ovh.major.songify.song.controller.SongEntity;
-import ovh.major.songify.song.dto.request.SingleSongRequestDto;
+import ovh.major.songify.song.domain.model.SongEntity;
+import ovh.major.songify.song.infrastructure.controller.dto.request.SingleSongRequestDto;
 
 public class SongEntityMapper {
 

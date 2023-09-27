@@ -1,4 +1,4 @@
-package ovh.major.songify.song.error;
+package ovh.major.songify.song.domain.model;
 
 public class SongNotFoundException extends RuntimeException {
     public SongNotFoundException(String message) {
