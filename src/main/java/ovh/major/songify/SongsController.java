@@ -1,13 +1,15 @@
 package ovh.major.songify;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 class SongsController {
@@ -15,9 +17,17 @@ class SongsController {
     Map<Integer,String> simpleDatabase = new HashMap<>();
 
     @GetMapping("/songs")
-    public ResponseEntity<SongResponseDto> getSongs(){
+    public ResponseEntity<SongResponseDto> getSongs(@RequestParam(required = false) Integer limit){
         simpleDatabase.put(1,"Wlazł kotek na płotek");
         simpleDatabase.put(2,"Z popielnika na Wojtusia iskiereczka mruga");
+
+        if (limit != null) {
+            Map<Integer,String> limitedMap = simpleDatabase.entrySet()
+                    .stream()
+                    .limit(limit)
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            return ResponseEntity.ok(new SongResponseDto(limitedMap));
+        }
 
         SongResponseDto response = new SongResponseDto(simpleDatabase);
         return ResponseEntity.ok(response);
@@ -26,6 +36,9 @@ class SongsController {
     @GetMapping("/songs/{id}")
     public ResponseEntity<SingleSongResponseDto> getSongsById(@PathVariable(name = "id" ) Integer songId) {
         String song = simpleDatabase.get(songId);
+        if (song == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         SingleSongResponseDto response = new SingleSongResponseDto(song);
         return ResponseEntity.ok(response);
     }
