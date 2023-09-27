@@ -11,6 +11,9 @@ import ovh.major.songify.song.dto.request.PartialySingleSongRequestDto;
 import ovh.major.songify.song.dto.request.SingleSongRequestDto;
 import ovh.major.songify.song.dto.response.*;
 import ovh.major.songify.song.error.SongNotFoundException;
+import ovh.major.songify.song.mappers.SingleSongResponseMapper;
+import ovh.major.songify.song.mappers.SongEntityMapper;
+import ovh.major.songify.song.mappers.UpdateSongResponseMapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,13 +26,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/songs")
 public class SongRestController {
 
-    Map<Integer, SongEntity> simpleSongsDatabase = new HashMap<>(Map.of(
-            1, new SongEntity("Wlazł kotek na płotek", "Unknown"),
-            2, new SongEntity("Z popielnika na Wojtusia iskiereczka mruga", "Unknown"),
-            3, new SongEntity("Ach śpij Kochanie", "Unknown"),
-            4, new SongEntity("Gdzie strumyk płynie z wolna", "Unknown"),
-            5, new SongEntity("Jedzie pociąg z daleka", "Unknown"),
-            6, new SongEntity("Miała baba koguta", "Unknown")));
+    Map<Integer, SongEntity> simpleSongsDatabase = exampleData();
 
     @GetMapping
     public ResponseEntity<SongResponseDto> getSongs(@RequestParam(required = false) Integer limit) {
@@ -37,7 +34,6 @@ public class SongRestController {
             Map<Integer, SongEntity> limitedMap = simpleSongsDatabase.entrySet().stream().limit(limit).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
             return ResponseEntity.ok(new SongResponseDto(limitedMap));
         }
-
         SongResponseDto response = new SongResponseDto(simpleSongsDatabase);
         return ResponseEntity.ok(response);
     }
@@ -49,30 +45,20 @@ public class SongRestController {
             throw new SongNotFoundException("Song with id " + songId + " not found.");
         }
         SongEntity song = simpleSongsDatabase.get(songId);
-        SingleSongResponseDto response = SingleSongResponseDto.builder()
-                .artist(song.artist())
-                .songName(song.name())
-                .build();
+        SingleSongResponseDto response = SingleSongResponseMapper.formSongEntity(song);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
     public ResponseEntity<SingleSongResponseDto> addSongs(@RequestBody @Valid @NotBlank @NotEmpty SingleSongRequestDto songRequest) {
         int newKey = newKey(simpleSongsDatabase);
-        simpleSongsDatabase.put(newKey, SongEntity.builder()
-                .artist(songRequest.artist())
-                .name(songRequest.songName())
-                .build());
+        simpleSongsDatabase.put(newKey, SongEntityMapper.fromSingleSongRequestDto(songRequest));
         log.info("Added song named: " + songRequest.songName() + " with id: " + newKey);
-        return ResponseEntity.ok(SingleSongResponseDto.builder()
-                .songName(songRequest.songName())
-                .artist(songRequest.artist())
-                .build());
+        return ResponseEntity.ok(SingleSongResponseMapper.formSingleSongRequestDto(songRequest));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteRemoveSongDto> deleteSongsById(@PathVariable(name = "id") Integer songId, @RequestHeader(required = false) String requestId) {
-
         log.info("DELETING RequestId: " + requestId);
         if (simpleSongsDatabase.containsKey(songId)) {
             simpleSongsDatabase.remove(songId);
@@ -88,15 +74,9 @@ public class SongRestController {
         if (!simpleSongsDatabase.containsKey(id)) {
             throw new SongNotFoundException("Song with id " + id + " not found.");
         }
-        SongEntity oldSong = simpleSongsDatabase.put(id, SongEntity.builder()
-                .name(songRequest.songName())
-                .artist(songRequest.artist())
-                .build());
+        SongEntity oldSong = simpleSongsDatabase.put(id, SongEntityMapper.fromSingleSongRequestDto(songRequest));
         log.info("Song with id " + id + " was changed");
-        return ResponseEntity.ok(UpdateSongResponseDto.builder()
-                .artist(songRequest.artist())
-                .songName(songRequest.songName())
-                .build());
+        return ResponseEntity.ok(UpdateSongResponseMapper.fromSingleSongRequestDto(songRequest));
     }
 
     @PatchMapping("/{id}")
@@ -105,20 +85,13 @@ public class SongRestController {
             throw new SongNotFoundException("Song with id " + id + " not found.");
         }
         SongEntity song = simpleSongsDatabase.get(id);
-        SongEntity.SongEntityBuilder builder = SongEntity.builder();
-        if (songRequest.artist() != null) {
-            builder.artist(songRequest.artist());
-        } else {
-            builder.artist(song.artist());
-        }
-        if (songRequest.songName() != null) {
-            builder.name(songRequest.songName());
-        } else {
-            builder.name(song.name());
-        }
-        SongEntity newSong = builder.build();
-        simpleSongsDatabase.put(id,newSong);
-        return ResponseEntity.ok(new PartiallyUpdateSongResponseDto("Song Updated",HttpStatus.OK));
+        SongEntity newSong = SongEntity.builder()
+                .artist((songRequest.artist() == null) ? song.artist() : songRequest.artist())
+                .name((songRequest.songName() == null) ? song.name() : songRequest.songName())
+                .build();
+
+        simpleSongsDatabase.put(id, newSong);
+        return ResponseEntity.ok(new PartiallyUpdateSongResponseDto("Song Updated", HttpStatus.OK));
     }
 
     @PostMapping("/list")
@@ -131,15 +104,9 @@ public class SongRestController {
         songsRequest.forEach(song -> {
             int newKey = newKey(simpleSongsDatabase);
             if (song.songName().length() > 0) {
-                simpleSongsDatabase.put(newKey, SongEntity.builder()
-                        .name(song.songName())
-                        .artist(song.artist())
-                        .build());
+                simpleSongsDatabase.put(newKey, SongEntityMapper.fromSingleSongRequestDto(song));
                 log.info("Added song named: " + song.songName() + " with id: " + newKey);
-                response.add(SingleSongResponseDto.builder()
-                        .artist(song.artist())
-                        .songName(song.songName())
-                        .build());
+                response.add(SingleSongResponseMapper.formSingleSongRequestDto(song));
             } else {
                 log.info("Song skipped - empty name");
             }
@@ -162,6 +129,16 @@ public class SongRestController {
             lastKey = entry.getKey();
         }
         return lastKey;
+    }
+
+    private Map<Integer, SongEntity> exampleData() {
+        return new HashMap<>(Map.of(
+                1, new SongEntity("Wlazł kotek na płotek", "Unknown"),
+                2, new SongEntity("Z popielnika na Wojtusia iskiereczka mruga", "Unknown"),
+                3, new SongEntity("Ach śpij Kochanie", "Unknown"),
+                4, new SongEntity("Gdzie strumyk płynie z wolna", "Unknown"),
+                5, new SongEntity("Jedzie pociąg z daleka", "Unknown"),
+                6, new SongEntity("Miała baba koguta", "Unknown")));
     }
 
 }
