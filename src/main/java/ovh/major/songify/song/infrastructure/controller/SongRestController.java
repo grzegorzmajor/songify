@@ -11,7 +11,7 @@ import ovh.major.songify.song.domain.service.SongAdder;
 import ovh.major.songify.song.domain.service.SongPatcher;
 import ovh.major.songify.song.domain.service.SongRemover;
 import ovh.major.songify.song.domain.service.SongRetriever;
-import ovh.major.songify.song.infrastructure.controller.dto.request.PartialySingleSongRequestDto;
+import ovh.major.songify.song.infrastructure.controller.dto.request.PartiallySingleSongRequestDto;
 import ovh.major.songify.song.infrastructure.controller.dto.request.SingleSongRequestDto;
 import ovh.major.songify.song.infrastructure.controller.dto.response.*;
 import ovh.major.songify.song.infrastructure.controller.mappers.SingleSongResponseMapper;
@@ -81,7 +81,7 @@ public class SongRestController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<PartiallyUpdateSongResponseDto> patchSongById(@PathVariable Integer id, @RequestBody PartialySingleSongRequestDto songRequest) {
+    public ResponseEntity<PartiallyUpdateSongResponseDto> patchSongById(@PathVariable Integer id, @RequestBody PartiallySingleSongRequestDto songRequest) {
         SingleSongResponseDto song =  songRetriever.getSongById(id);
         SongEntity newSong = SongEntity.builder()
                 .artist((songRequest.artist() == null) ? song.artist() : songRequest.artist())
