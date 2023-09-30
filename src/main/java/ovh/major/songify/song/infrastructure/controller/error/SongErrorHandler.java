@@ -3,10 +3,10 @@ package ovh.major.songify.song.infrastructure.controller.error;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ovh.major.songify.song.infrastructure.controller.SongRestController;
+import ovh.major.songify.song.infrastructure.controller.SongInMemoRestController;
 import ovh.major.songify.song.domain.model.SongNotFoundException;
 
-@ControllerAdvice(assignableTypes = SongRestController.class)
+@ControllerAdvice(assignableTypes = SongInMemoRestController.class)
 @Log4j2
 public class SongErrorHandler {
     @ExceptionHandler(SongNotFoundException.class)

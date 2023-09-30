@@ -7,27 +7,25 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ovh.major.songify.song.domain.service.SongAdder;
-import ovh.major.songify.song.domain.service.SongPatcher;
-import ovh.major.songify.song.domain.service.SongRemover;
-import ovh.major.songify.song.domain.service.SongRetriever;
+import ovh.major.songify.song.domain.model.SongInMemo;
+import ovh.major.songify.song.domain.service.inmemo.SongAdder;
+import ovh.major.songify.song.domain.service.inmemo.SongPatcher;
+import ovh.major.songify.song.domain.service.inmemo.SongRemover;
+import ovh.major.songify.song.domain.service.inmemo.SongRetriever;
 import ovh.major.songify.song.infrastructure.controller.dto.request.PartiallySingleSongRequestDto;
 import ovh.major.songify.song.infrastructure.controller.dto.request.SingleSongRequestDto;
 import ovh.major.songify.song.infrastructure.controller.dto.response.*;
 import ovh.major.songify.song.infrastructure.controller.mappers.SingleSongResponseMapper;
-import ovh.major.songify.song.infrastructure.controller.mappers.SongEntityMapper;
+import ovh.major.songify.song.infrastructure.controller.mappers.SongInMemoMapper;
 import ovh.major.songify.song.infrastructure.controller.mappers.UpdateSongResponseMapper;
-import ovh.major.songify.song.domain.model.SongEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @Log4j2
-@RequestMapping("/songs")
-public class SongRestController {
-
-
+@RequestMapping("/inmemo/songs")
+public class SongInMemoRestController {
 
     private final SongAdder songAdder;
     private final SongRetriever songRetriever;
@@ -35,17 +33,15 @@ public class SongRestController {
 
     private final SongPatcher songPatcher;
 
-    SongRestController(SongAdder songAdder,
-                       SongRetriever songRetriever,
-                       SongRemover songRemover,
-                       SongPatcher songPatcher) {
+    SongInMemoRestController(SongAdder songAdder,
+                             SongRetriever songRetriever,
+                             SongRemover songRemover,
+                             SongPatcher songPatcher) {
         this.songAdder = songAdder;
         this.songRetriever = songRetriever;
         this.songRemover = songRemover;
         this.songPatcher = songPatcher;
-
     }
-
 
     @GetMapping
     public ResponseEntity<SongResponseDto> getSongs(@RequestParam(required = false) Integer limit) {
@@ -76,18 +72,18 @@ public class SongRestController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UpdateSongResponseDto> putSongById(@PathVariable Integer id, @RequestBody @Valid SingleSongRequestDto songRequest) {
-        SingleSongResponseDto oldSong = songPatcher.updateSong(id, SongEntityMapper.fromSingleSongRequestDto(songRequest));
+        SingleSongResponseDto oldSong = songPatcher.updateSong(id, SongInMemoMapper.fromSingleSongRequestDto(songRequest));
         return ResponseEntity.ok(UpdateSongResponseMapper.fromSingleSongRequestDto(songRequest));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<PartiallyUpdateSongResponseDto> patchSongById(@PathVariable Integer id, @RequestBody PartiallySingleSongRequestDto songRequest) {
-        SingleSongResponseDto song =  songRetriever.getSongById(id);
-        SongEntity newSong = SongEntity.builder()
+        SingleSongResponseDto song = songRetriever.getSongById(id);
+        SongInMemo newSong = SongInMemo.builder()
                 .artist((songRequest.artist() == null) ? song.artist() : songRequest.artist())
                 .name((songRequest.songName() == null) ? song.songName() : songRequest.songName())
                 .build();
-        songPatcher.updateSong(id,newSong);
+        songPatcher.updateSong(id, newSong);
         return ResponseEntity.ok(new PartiallyUpdateSongResponseDto("Song Updated", HttpStatus.OK));
     }
 
@@ -110,7 +106,6 @@ public class SongRestController {
 
 
     }
-
 
 
 }

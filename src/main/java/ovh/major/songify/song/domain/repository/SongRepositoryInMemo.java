@@ -1,45 +1,45 @@
 package ovh.major.songify.song.domain.repository;
 
 import org.springframework.stereotype.Repository;
-import ovh.major.songify.song.domain.model.SongEntity;
+import ovh.major.songify.song.domain.model.SongInMemo;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
-public class SimpleSongDatabase {
-    Map<Integer, SongEntity> simpleSongsDatabase = ExampleData.get();
+public class SongRepositoryInMemo {
+    Map<Integer, SongInMemo> simpleSongsDatabase; //= ExampleData.get();
 
     public Boolean containsKey(Integer songId) {
         return simpleSongsDatabase.containsKey(songId);
     }
 
-    public SongEntity getSong(Integer id) {
+    public SongInMemo getSong(Integer id) {
         return simpleSongsDatabase.get(id);
     }
 
-    public Map<Integer, SongEntity> getSongsLimited(Integer limit) {
+    public Map<Integer, SongInMemo> getSongsLimited(Integer limit) {
         return simpleSongsDatabase.entrySet().stream().limit(limit).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public Map<Integer, SongEntity> getAllSongs() {
+    public Map<Integer, SongInMemo> getAllSongs() {
         return new HashMap<>(simpleSongsDatabase);
     }
 
-    public Integer saveToDatabase(SongEntity song) {
+    public Integer saveToDatabase(SongInMemo song) {
         Integer newKey = newKey(simpleSongsDatabase);
         simpleSongsDatabase.put(newKey, song);
         return newKey;
     }
 
-    public SongEntity saveToDatabase(Integer id, SongEntity song) {
-        SongEntity oldSong = simpleSongsDatabase.get(id);
+    public SongInMemo saveToDatabase(Integer id, SongInMemo song) {
+        SongInMemo oldSong = simpleSongsDatabase.get(id);
         simpleSongsDatabase.put(id, song);
         return oldSong;
     }
 
-    private Integer newKey(Map<Integer, SongEntity> map) {
+    private Integer newKey(Map<Integer, SongInMemo> map) {
         Integer lastKey = lastKey(map);
         int newKey = 1;
         if (lastKey != null) {
@@ -48,9 +48,9 @@ public class SimpleSongDatabase {
         return newKey;
     }
 
-    private Integer lastKey(Map<Integer, SongEntity> map) {
+    private Integer lastKey(Map<Integer, SongInMemo> map) {
         Integer lastKey = null;
-        for (Map.Entry<Integer, SongEntity> entry : map.entrySet()) {
+        for (Map.Entry<Integer, SongInMemo> entry : map.entrySet()) {
             lastKey = entry.getKey();
         }
         return lastKey;

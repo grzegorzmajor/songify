@@ -1,7 +1,20 @@
 package ovh.major.songify.song.domain.model;
 
-import lombok.Builder;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Builder
-public record SongEntity(String name, String artist) {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class SongEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false)
+    private String name;
+    @Column(nullable = false)
+    private String artist;
 }

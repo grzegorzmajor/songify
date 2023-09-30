@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import ovh.major.songify.song.infrastructure.controller.SongRestController;
+import ovh.major.songify.song.infrastructure.controller.SongInMemoRestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ControllerAdvice(assignableTypes = SongRestController.class) //do obsługi błędów.
+@ControllerAdvice(assignableTypes = SongInMemoRestController.class) //do obsługi błędów.
 public class ApiValidationErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

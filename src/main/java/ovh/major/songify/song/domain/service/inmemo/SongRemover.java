@@ -1,11 +1,11 @@
-package ovh.major.songify.song.domain.service;
+package ovh.major.songify.song.domain.service.inmemo;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ovh.major.songify.song.domain.model.SongNotFoundException;
-import ovh.major.songify.song.domain.repository.SimpleSongDatabase;
+import ovh.major.songify.song.domain.repository.SongRepositoryInMemo;
 import ovh.major.songify.song.infrastructure.controller.dto.response.DeleteRemoveSongDto;
 
 @AllArgsConstructor
@@ -13,7 +13,7 @@ import ovh.major.songify.song.infrastructure.controller.dto.response.DeleteRemov
 @Log4j2
 public class SongRemover {
 
-    private final SimpleSongDatabase simpleSongsDatabase;
+    private final SongRepositoryInMemo simpleSongsDatabase;
 
     public DeleteRemoveSongDto remove(Integer songId) {
         if (simpleSongsDatabase.containsKey(songId)) {
