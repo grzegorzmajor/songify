@@ -7,18 +7,27 @@ import ovh.major.songify.song.domain.model.SongEntity;
 
 import java.util.List;
 import java.util.Optional;
-//ToDo will require the implementation of other methods;
 
-public interface SongRepositoryPostgres extends Repository<SongEntity, Long> {
+public interface SongRepositoryPostgres extends Repository<SongEntity, Integer> {
 
     SongEntity save(SongEntity song);
+
+    @Query("SELECT s FROM SongEntity s")
     List<SongEntity> findAll();
-    Optional<SongEntity> findById(Long id);
-    void deleteById(Long id);
-    boolean existsById(Long id);
+
+    @Query("SELECT s FROM SongEntity s WHERE s.id = :id")
+    Optional<SongEntity> findById(Integer id);
+
+    @Modifying
+    @Query("DELETE FROM SongEntity s WHERE s.id = :id")
+    void deleteById(Integer id);
+
+    @Modifying
+    @Query("SELECT true FROM SongEntity s WHERE s.id = :id")
+    boolean existsById(Integer id);
 
     @Modifying
     @Query("UPDATE SongEntity s SET s.name = :#{#song.name}, s.artist = :#{#song.artist} WHERE s.id = :id")
-    SongEntity updateById(Long id, SongEntity song);
+    Integer updateById(Integer id, SongEntity song);
 
 }

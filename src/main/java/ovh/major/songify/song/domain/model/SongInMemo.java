@@ -1,9 +1,10 @@
 package ovh.major.songify.song.domain.model;
 
-import lombok.*;
+import lombok.Builder;
 
 @Builder
-public record SongInMemo (
+public record SongInMemo(
         String name,
         String artist
-) {}
+) {
+}

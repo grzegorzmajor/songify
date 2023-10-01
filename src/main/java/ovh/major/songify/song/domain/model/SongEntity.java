@@ -9,10 +9,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class SongEntity {
+public class SongEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)

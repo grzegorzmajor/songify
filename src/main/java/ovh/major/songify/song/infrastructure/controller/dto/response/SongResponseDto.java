@@ -1,6 +1,8 @@
 package ovh.major.songify.song.infrastructure.controller.dto.response;
 
-import java.util.Map;
+import lombok.Builder;
 
-public record SongResponseDto(Map<Integer, SingleSongResponseDto> songs) {
+@Builder
+public record SongResponseDto(
+        String songName,String artist) {
 }

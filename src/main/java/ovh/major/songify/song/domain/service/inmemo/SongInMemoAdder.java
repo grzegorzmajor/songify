@@ -1,4 +1,4 @@
-package ovh.major.songify.song.domain.service.postgre;
+package ovh.major.songify.song.domain.service.inmemo;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -11,8 +11,7 @@ import ovh.major.songify.song.infrastructure.controller.mappers.SongInMemoMapper
 @Log4j2
 @Service
 @AllArgsConstructor
-public class SongAdder {
-    //ToDo require change Song from InMemo to Entity and repository to postgres
+public class SongInMemoAdder {
 
     private final SongRepositoryInMemo simpleSongsDatabase;
 

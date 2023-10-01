@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 @Repository
 public class SongRepositoryInMemo {
-    Map<Integer, SongInMemo> simpleSongsDatabase; //= ExampleData.get();
+    Map<Integer, SongInMemo> simpleSongsDatabase = ExampleData.get();
 
     public Boolean containsKey(Integer songId) {
         return simpleSongsDatabase.containsKey(songId);
@@ -58,5 +58,9 @@ public class SongRepositoryInMemo {
 
     public void remove(Integer songId) {
         simpleSongsDatabase.remove(songId);
+    }
+
+    public void deleteAll() {
+        simpleSongsDatabase.clear();
     }
 }

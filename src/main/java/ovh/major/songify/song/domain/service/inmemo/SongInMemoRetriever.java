@@ -5,42 +5,42 @@ import org.springframework.stereotype.Service;
 import ovh.major.songify.song.domain.model.SongInMemo;
 import ovh.major.songify.song.domain.model.SongNotFoundException;
 import ovh.major.songify.song.domain.repository.SongRepositoryInMemo;
-import ovh.major.songify.song.infrastructure.controller.dto.response.SingleSongResponseDto;
-import ovh.major.songify.song.infrastructure.controller.mappers.SingleSongResponseMapper;
+import ovh.major.songify.song.infrastructure.controller.dto.response.SongResponseDto;
+import ovh.major.songify.song.infrastructure.controller.mappers.SongResponseMapper;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @AllArgsConstructor
 @Service
-public class SongRetriever {
+public class SongInMemoRetriever {
 
     private final SongRepositoryInMemo simpleSongsDatabase;
 
-    public Map<Integer, SingleSongResponseDto> getSongs(Integer limit) {
+    public Map<Integer, SongResponseDto> getSongs(Integer limit) {
         Map<Integer, SongInMemo> request = simpleSongsDatabase.getSongsLimited(limit);
-        Map<Integer, SingleSongResponseDto> response = new HashMap<>();
+        Map<Integer, SongResponseDto> response = new HashMap<>();
         request.forEach((id,song) -> {
-            response.put(id,SingleSongResponseMapper.formSongInMemo(song));
+            response.put(id, SongResponseMapper.formSongInMemo(song));
         });
 
         return response;
     }
 
-    public Map<Integer, SingleSongResponseDto> getSongs() {
+    public Map<Integer, SongResponseDto> getSongs() {
         Map<Integer, SongInMemo> request = simpleSongsDatabase.getAllSongs();
-        Map<Integer, SingleSongResponseDto> response = new HashMap<>();
+        Map<Integer, SongResponseDto> response = new HashMap<>();
         request.forEach((id,song) -> {
-            response.put(id,SingleSongResponseMapper.formSongInMemo(song));
+            response.put(id, SongResponseMapper.formSongInMemo(song));
         });
         return response;
     }
 
-    public SingleSongResponseDto getSongById(Integer songId) {
+    public SongResponseDto getSongById(Integer songId) {
         if (!simpleSongsDatabase.containsKey(songId)) {
             throw new SongNotFoundException("Song with id " + songId + " not found.");
         }
-        return SingleSongResponseMapper.formSongInMemo(simpleSongsDatabase.getSong(songId));
+        return SongResponseMapper.formSongInMemo(simpleSongsDatabase.getSong(songId));
     }
 
 }

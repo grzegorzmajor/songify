@@ -2,13 +2,13 @@ version: '3.8'
 services:
   db:
     image: postgres
-    container_name: local_pgdb
+    container_name: localdb
     restart: always
     ports:
-      - "54320:5432"
+      - "5533:5432"
     environment:
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: test
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass123
       POSTGRES_DB: postgres
   pgadmin:
     image: dpage/pgadmin4
@@ -19,5 +19,3 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: e@e.com
       PGADMIN_DEFAULT_PASSWORD: admin
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin

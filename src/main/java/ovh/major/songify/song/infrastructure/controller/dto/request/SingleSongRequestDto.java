@@ -10,6 +10,5 @@ public record SingleSongRequestDto(
         @NotNull(message = "songName must not be null")
         @NotEmpty(message = "songName must not be empty")
         String artist
-
 ) {
 }
