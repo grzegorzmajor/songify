@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import ovh.major.songify.song.infrastructure.controller.SongInMemoRestController;
+import ovh.major.songify.song.domain.inmemo.controller.SongInMemoRestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
