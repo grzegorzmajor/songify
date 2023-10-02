@@ -27,15 +27,6 @@ public class SongPostgresRetriever {
         return response;
     }
 
-//    public Map<Integer, SongResponseDto> getSongs() {
-//        Map<Integer, SongInMemo> request = simpleSongsDatabase.getAllSongs();
-//        Map<Integer, SongResponseDto> response = new HashMap<>();
-//        request.forEach((id,song) -> {
-//            response.put(id,SingleSongResponseMapper.formSongInMemo(song));
-//        });
-//        return response;
-//    }
-
     public SongResponseDto getSongById(Integer songId) {
         SongEntity songEntity = songRepositoryPostgres.findById(songId)
                 .orElseThrow();
