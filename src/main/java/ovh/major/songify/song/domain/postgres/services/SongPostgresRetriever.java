@@ -20,9 +20,7 @@ public class SongPostgresRetriever {
     public List<SongResponseDto> getSongs(Pageable pageable) {
         List<SongEntity> songsEntity = songRepositoryPostgres.findAll(pageable);
         List<SongResponseDto> response = new ArrayList<>();
-        songsEntity.forEach(song -> {
-            response.add(SongResponseMapper.formSongEntity(song));
-        });
+        songsEntity.forEach(song -> response.add(SongResponseMapper.formSongEntity(song)));
 
         return response;
     }

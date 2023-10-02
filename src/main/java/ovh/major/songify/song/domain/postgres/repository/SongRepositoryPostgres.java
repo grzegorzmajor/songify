@@ -23,7 +23,6 @@ public interface SongRepositoryPostgres extends Repository<SongEntity, Integer> 
     @Query("DELETE FROM SongEntity s WHERE s.id = :id")
     void deleteById(Integer id);
 
-    @Modifying
     @Query("SELECT true FROM SongEntity s WHERE s.id = :id")
     boolean existsById(Integer id);
 

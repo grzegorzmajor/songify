@@ -72,7 +72,7 @@ public class SongPostgresRestController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UpdateSongResponseDto> putSongById(@PathVariable Integer id, @RequestBody @Valid SingleSongRequestDto songRequest) {
-        SongResponseDto oldSong = songPatcher.updateSong(id, PartiallySingleSongRequestDto.builder()
+        songPatcher.updateSong(id, PartiallySingleSongRequestDto.builder()
                 .artist(songRequest.artist())
                 .songName(songRequest.songName())
                 .build());
