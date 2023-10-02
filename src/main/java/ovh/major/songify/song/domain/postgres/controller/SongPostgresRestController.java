@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,7 @@ import ovh.major.songify.song.domain.dto.response.SongResponseDto;
 import ovh.major.songify.song.domain.dto.response.UpdateSongResponseDto;
 import ovh.major.songify.song.domain.mappers.SongResponseMapper;
 import ovh.major.songify.song.domain.mappers.UpdateSongResponseMapper;
+
 
 import java.util.List;
 
@@ -44,8 +47,8 @@ public class SongPostgresRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SongResponseDto>> getSongs() {
-        return ResponseEntity.ok(songRetriever.getSongs());
+    public ResponseEntity<List<SongResponseDto>> getSongs(@PageableDefault(page = 0, size = 10) Pageable pageable) {
+        return ResponseEntity.ok(songRetriever.getSongs(pageable));
     }
 
     @GetMapping("/{id}")

@@ -1,5 +1,6 @@
 package ovh.major.songify.song.domain.postgres.services;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import ovh.major.songify.song.domain.dto.response.DeletingSongStatusDto;
 @AllArgsConstructor
 @Service
 @Log4j2
+@Transactional
 public class SongPostgresRemover {
 
     private final SongRepositoryPostgres songRepositoryPostgres;

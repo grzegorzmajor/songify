@@ -1,6 +1,7 @@
 package ovh.major.songify.song.domain.postgres.repository;
 
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import ovh.major.songify.song.domain.postgres.SongEntity;
@@ -13,7 +14,7 @@ public interface SongRepositoryPostgres extends Repository<SongEntity, Integer> 
     SongEntity save(SongEntity song);
 
     @Query("SELECT s FROM SongEntity s")
-    List<SongEntity> findAll();
+    List<SongEntity> findAll(Pageable pageable);
 
     @Query("SELECT s FROM SongEntity s WHERE s.id = :id")
     Optional<SongEntity> findById(Integer id);

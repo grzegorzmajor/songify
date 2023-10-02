@@ -1,5 +1,6 @@
 package ovh.major.songify.song.domain.postgres.services;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import ovh.major.songify.song.domain.postgres.SongEntityMapper;
 @Log4j2
 @Service
 @AllArgsConstructor
+@Transactional
 public class SongPostgresAdder {
 
     private final SongRepositoryPostgres songRepositoryPostgres;

@@ -1,6 +1,7 @@
 package ovh.major.songify.song.domain.postgres.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ovh.major.songify.song.domain.postgres.SongEntity;
 import ovh.major.songify.song.domain.postgres.repository.SongRepositoryPostgres;
@@ -13,12 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @Service
 public class SongPostgresRetriever {
-    //ToDo require adding pagination
 
     private final SongRepositoryPostgres songRepositoryPostgres;
 
-    public List<SongResponseDto> getSongs() {
-        List<SongEntity> songsEntity = songRepositoryPostgres.findAll();
+    public List<SongResponseDto> getSongs(Pageable pageable) {
+        List<SongEntity> songsEntity = songRepositoryPostgres.findAll(pageable);
         List<SongResponseDto> response = new ArrayList<>();
         songsEntity.forEach(song -> {
             response.add(SongResponseMapper.formSongEntity(song));
